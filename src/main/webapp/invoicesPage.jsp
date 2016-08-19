@@ -12,19 +12,19 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Clients!</title>
 <!-- BootStrap -->
-	<link rel="stylesheet" href="/IMS_Web_Side/resources/css/bootstrap.css">
-	<link rel="stylesheet" href="/IMS_Web_Side/resources/css/bootstrap.min.css">
-	<script src="/IMS_Web_Side/resources/js/bootstrap.js"></script>
-	<script src="/IMS_Web_Side/resources/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/css/bootstrap.css">
+	<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/css/bootstrap.min.css">
+	<script src="${pageContext.servletContext.contextPath}/resources/js/bootstrap.js"></script>
+	<script src="${pageContext.servletContext.contextPath}/resources/js/bootstrap.min.js"></script>
 	
 	<!-- jQuery -->
-	<script src="/IMS_Web_Side/resources/js/jquery-3.1.0.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 	
 	<!-- CSS Google Text -->
 	<link href="https://fonts.googleapis.com/css?family=Roboto:400,900" rel="stylesheet" type="text/css">
 	
 	<!-- Custom CSS -->
-	<link rel="stylesheet" href="/IMS_Web_Side/resources/css/index.css">
+	<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/css/index.css">
 </head>
 <body>
 	<div class="container main .col-xs-12 .col-sm-6 .col-lg-8">
