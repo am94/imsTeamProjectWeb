@@ -121,8 +121,8 @@ public class BusinessLayer {
 		
 	}
 	
-	public Set<Order> getClientOrders(int clientId){
-		Set<Order> orders = dla.getClientInvoices(clientId);
+	public Set<Invoice> getClientInvoices(String clientName){
+		Set<Invoice> orders = dla.getClientInvoices(clientName);
 		
 		return orders;
 	}

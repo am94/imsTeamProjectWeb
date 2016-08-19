@@ -1,6 +1,7 @@
 package com.revature.controllers;
 
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import javax.servlet.ServletContext;
@@ -19,18 +20,27 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.revature.beans.Address;
 import com.revature.beans.Client;
 import com.revature.beans.Invoice;
 import com.revature.beans.Product;
+import com.revature.dataAccess.ManagementDAO;
 
 @Controller
 public class AjaxController implements ServletContextAware, InitializingBean
 {
 	@Autowired
 	private ServletContext servletContext; //instance var
+
+/*	private List<Client> clients = new Vector<Client>();
+	private List<Client> invoices = new Vector<Client>();
+	private List<Client> products = new Vector<Client>();*/
 	
-	private List<Client> clients = new Vector<Client>();
+	@SuppressWarnings("unchecked")
+	private List<Client> clients = (List<Client>) new ManagementDAO().getAllClients();
+	@SuppressWarnings("unchecked")
+	private List<Invoice> invoices = (List<Invoice>) new ManagementDAO().getInvoices();
+	@SuppressWarnings("unchecked")
+	private List<Product> products = (List<Product>) new ManagementDAO().getAllProducts();
 
 	@RequestMapping(
 			method=RequestMethod.GET, 
@@ -38,9 +48,55 @@ public class AjaxController implements ServletContextAware, InitializingBean
 			produces="application/json")
 	@ResponseBody	// write return value directly to HTTP response
 					// in the specified content-type (produces=content-type)
+	
+	/* =================================================================
+	 * ================!!!!!CLIENT CONTOLLER STUFFS!!!!!================
+	 * =================================================================
+	 */
+	
 	public List<Client> getClients()
 	{
 		return clients;
+	}
+	
+	public Client getClientBy(String str)  //This class will be used to sort client lists...hopefully it works as planned
+	{
+/*		String classType = String.valueOf(obj.getClass());
+		
+		classType = classType.substring(classType.lastIndexOf('.')+1);
+		
+		switch (classType)
+		{
+		case "Address":	//Do stuff
+			break;
+		case "String":	//Do stuff
+			break;
+		case "Integer":	//Do stuff
+			break;
+		default:break;
+		}*/
+		
+		return null;
+	}
+
+	@RequestMapping(value="clientList.do", method=RequestMethod.GET)
+	public ModelAndView showClients(
+						HttpServletRequest request,
+						HttpServletResponse response)
+	{
+		int type = 0;
+		if(request.getParameter("clientType").equals("Outgoing")) type = 1;
+		
+		@SuppressWarnings("unchecked")
+		Vector<Client> clients = (Vector<Client>) new ManagementDAO().getClients(type);
+		
+		this.servletContext.setAttribute("Clients", clients); //update clients
+		
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("clientView"); // view.jsp IRVR
+		mv.addObject("clientView", clients); // request-scoped variables
+		
+		return mv;
 	}
 
 	@RequestMapping(value="regClient.do", method=RequestMethod.GET)
@@ -56,14 +112,47 @@ public class AjaxController implements ServletContextAware, InitializingBean
 		}
 		
 		@SuppressWarnings("unchecked")
-		Vector<Client> clients = 
-				(Vector<Client>)this.servletContext.getAttribute("clients");
+		Vector<Client> clients = (Vector<Client>)this.servletContext.getAttribute("clients");
 		clients.add(client);
+		
 		this.servletContext.setAttribute("Clients", clients); //update peeps
+		
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("clientView"); // view.jsp IRVR
-		mv.addObject("success", "Successfully added a Client!"); // request-scoped variables
-		request.getSession().setAttribute("user", "Dan Pickles");
+		mv.addObject("clientView", client); // request-scoped variables
+		
+		request.getSession().setAttribute("user", client.getName());
+		return mv;
+	}
+
+	/* =================================================================
+	 * ================!!!!!CLIENT CONTOLLER STUFFS!!!!!================
+	 * =================================================================
+	 */
+	
+
+	/* ==================================================================
+	 * ================!!!!!INVOICE CONTOLLER STUFFS!!!!!================
+	 * ==================================================================
+	 */
+	
+	public List<Invoice> getInvoices()
+	{
+		return invoices;
+	}
+	
+	@RequestMapping(value="getInvoice.do", method=RequestMethod.GET)
+	public ModelAndView getInvoiceByClient(
+			HttpServletRequest request,
+			HttpServletResponse response)
+	{		
+		Set<Invoice> invoices = new ManagementDAO().getClientInvoices(request.getParameter("clientName"));
+
+		this.servletContext.setAttribute("Invoices", invoices); //update invoices
+		
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("invoiceView"); // view.jsp IRVR
+		mv.addObject("invoiceView", invoices); // request-scoped variables
 		return mv;
 	}
 	
@@ -87,8 +176,23 @@ public class AjaxController implements ServletContextAware, InitializingBean
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("invoiceView"); // view.jsp IRVR
 		mv.addObject("success", "Successfully added invoice!"); // request-scoped variables
-		request.getSession().setAttribute("user", "Dan Pickles");
 		return mv;
+	}
+
+	/* ==================================================================
+	 * ================!!!!!INVOICE CONTOLLER STUFFS!!!!!================
+	 * ==================================================================
+	 */
+
+	
+	/* ==================================================================
+	 * ================!!!!!PRODUCT CONTOLLER STUFFS!!!!!================
+	 * ==================================================================
+	 */
+	
+	public List<Product> getProducts()
+	{
+		return products;
 	}
 	
 	@RequestMapping(value="regProduct.do", method=RequestMethod.GET)
@@ -111,29 +215,14 @@ public class AjaxController implements ServletContextAware, InitializingBean
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("productView"); // view.jsp IRVR
 		mv.addObject("success", "Successfully added product!"); // request-scoped variables
-		request.getSession().setAttribute("user", "Dan Pickles");
 		return mv;
 	}
+
 	
-	public Client getClientBy(Object obj)  //This class will be used to sort client lists...hopefully it works as planned
-	{
-		String classType = String.valueOf(obj.getClass());
-		
-		classType = classType.substring(classType.lastIndexOf('.')+1);
-		
-		switch (classType)
-		{
-		case "Address":	//Do stuff
-			break;
-		case "String":	//Do stuff
-			break;
-		case "Integer":	//Do stuff
-			break;
-		default:break;
-		}
-		
-		return null;
-	}
+	/* ==================================================================
+	 * ================!!!!!PRODUCT CONTOLLER STUFFS!!!!!================
+	 * ==================================================================
+	 */
 	
 	public void afterPropertiesSet() throws Exception
 	{
@@ -150,7 +239,7 @@ public class AjaxController implements ServletContextAware, InitializingBean
 	
 	public static void main(String args[])
 	{
-		new AjaxController().getClientBy(new Address());
+
 	}
 	
 	
