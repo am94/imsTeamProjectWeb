@@ -11,8 +11,35 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Clients!</title>
+<!-- BootStrap -->
+	<link rel="stylesheet" href="/IMS_Web_Side/resources/css/bootstrap.css">
+	<link rel="stylesheet" href="/IMS_Web_Side/resources/css/bootstrap.min.css">
+	<script src="/IMS_Web_Side/resources/js/bootstrap.js"></script>
+	<script src="/IMS_Web_Side/resources/js/bootstrap.min.js"></script>
+	
+	<!-- jQuery -->
+	<script src="/IMS_Web_Side/resources/js/jquery-3.1.0.js"></script>
+	
+	<!-- CSS Google Text -->
+	<link href="https://fonts.googleapis.com/css?family=Roboto:400,900" rel="stylesheet" type="text/css">
+	
+	<!-- Custom CSS -->
+	<link rel="stylesheet" href="/IMS_Web_Side/resources/css/index.css">
 </head>
 <body>
+	<div class="container main .col-xs-12 .col-sm-6 .col-lg-8">
+
+	<div class="container header .col-xs-12 .col-sm-6 .col-lg-8">
+		<jsp:include page="/headerPage/header.jsp"></jsp:include>
+	</div>
+	
+	<div class="container nav .col-xs-12 .col-sm-6 .col-lg-8">
+		<jsp:include page="/navPage/nav.jsp"></jsp:include>
+	</div>
+	<br />
+	
+	<div class="container body .col-xs-12 .col-sm-6 .col-lg-8">
+
 	<div>
 		<table id="invoiceTable">
 			<tr>
@@ -43,6 +70,14 @@
 		  	 <td><input type="button" value="Add!">
 		  </tr>
 		</table>
+	</div>
+	</div>
+	<br />
+	
+		<div class="container footer .col-xs-12 .col-sm-6 .col-lg-8">
+		<jsp:include page="/footerPage/footer.jsp"></jsp:include>
+	</div>
+	<br />
 	</div>
 </body>
 </html>
