@@ -23,6 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.revature.beans.Client;
 import com.revature.beans.Invoice;
 import com.revature.beans.Product;
+import com.revature.dataAccess.DataLayerAccess;
 import com.revature.dataAccess.ManagementDAO;
 
 @Controller
@@ -152,6 +153,23 @@ public class AjaxController implements ServletContextAware, InitializingBean
 		mv.addObject("invoiceView", invoices); // request-scoped variables
 		return mv;
 	}
+
+	@RequestMapping(value="clientInfo.do", method=RequestMethod.GET)
+	public Client getInvoiceInfo(HttpServletRequest request, HttpServletResponse response)  //This class will be used to sort client lists...hopefully it works as planned
+	{
+		Client info = new DataLayerAccess().getInvoice(request.getParameter("id"));
+
+		request.setAttribute("id", info.getId());
+		request.setAttribute("name", info.getName());
+		request.setAttribute("email", info.getEmail());
+		request.setAttribute("pocName", info.getPocName());
+		request.setAttribute("phone", info.getPhone());
+		request.setAttribute("fax", info.getFax());
+		request.setAttribute("address", info.getAddress());
+		request.setAttribute("address", info.getClientType());
+		
+		return null;
+	}
 	
 	@RequestMapping(value="regInvoice.do", method=RequestMethod.GET)
 	public ModelAndView registerInvoice(
@@ -190,6 +208,15 @@ public class AjaxController implements ServletContextAware, InitializingBean
 	public List<Product> getProducts()
 	{
 		return products;
+	}
+	
+	public List<Product> getProductsByClient(
+			HttpServletRequest request,
+			HttpServletResponse response)
+	{
+		List<Product> results = new DataLayerAccess().getProdsByClient(Integer.parseInt(request.getParameter("id")));
+		
+		return results;
 	}
 	
 	@RequestMapping(value="regProduct.do", method=RequestMethod.GET)
