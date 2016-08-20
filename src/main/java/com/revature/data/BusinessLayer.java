@@ -121,6 +121,16 @@ public class BusinessLayer {
 		
 	}
 	
+	public Set<Client> getAllClients() {
+		Set <Client> clients = dla.getAllClients();
+		return clients;
+	}
+	
+	public Client getClient(String parameter) {
+		Client client = dla.getClientByName(parameter);
+		return client;
+	}
+	
 	public Set<Invoice> getClientInvoices(String clientName){
 		Set<Invoice> orders = dla.getClientInvoices(clientName);
 		
@@ -185,7 +195,12 @@ public class BusinessLayer {
 	public void createInvoice(Invoice invoice){
 		dla.createObject(invoice);
 	}
-	
+
+	public Set<Product> getProdsByClient(int parseInt) {
+		
+		return null;
+	}
+
 	
 	////////////////////// END CREATING INCOMING AND OUTGOING INVOICES //////////////////////////////
 }

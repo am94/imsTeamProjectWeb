@@ -23,7 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.revature.beans.Client;
 import com.revature.beans.Invoice;
 import com.revature.beans.Product;
-import com.revature.dataAccess.ManagementDAO;
+import com.revature.data.BusinessLayer;
 
 @Controller
 public class AjaxController implements ServletContextAware, InitializingBean
@@ -31,16 +31,18 @@ public class AjaxController implements ServletContextAware, InitializingBean
 	@Autowired
 	private ServletContext servletContext; //instance var
 
+	private BusinessLayer bl = new BusinessLayer();
+	
 /*	private List<Client> clients = new Vector<Client>();
 	private List<Client> invoices = new Vector<Client>();
 	private List<Client> products = new Vector<Client>();*/
 	
 	@SuppressWarnings("unchecked")
-	private List<Client> clients = (List<Client>) new ManagementDAO().getAllClients();
+	private List<Client> clients = (List<Client>) bl.getAllClients();
 	@SuppressWarnings("unchecked")
-	private List<Invoice> invoices = (List<Invoice>) new ManagementDAO().getInvoices();
+	private List<Invoice> invoices = (List<Invoice>) bl.getInvoices();
 	@SuppressWarnings("unchecked")
-	private List<Product> products = (List<Product>) new ManagementDAO().getAllProducts();
+	private List<Product> products = (List<Product>) bl.getAllProducts();
 
 	@RequestMapping(
 			method=RequestMethod.GET, 
@@ -62,9 +64,7 @@ public class AjaxController implements ServletContextAware, InitializingBean
 	@RequestMapping(value="clientInfo.do", method=RequestMethod.GET)
 	public Client getClientInfo(HttpServletRequest request, HttpServletResponse response)  //This class will be used to sort client lists...hopefully it works as planned
 	{
-		//Need to change to design pattern layout in email
-				//	Controller --> Business Layer --> DataLayerAccess --> ManagementDAO
-		Client info = new ManagementDAO().getClient(request.getParameter("name"));
+		Client info = bl.getClient(request.getParameter("name"));
 
 		request.setAttribute("id", info.getId());
 		request.setAttribute("name", info.getName());
@@ -77,7 +77,7 @@ public class AjaxController implements ServletContextAware, InitializingBean
 		
 		return null;
 	}
-	
+
 	@RequestMapping(value="clientList.do", method=RequestMethod.GET)
 	public ModelAndView showClients(
 						HttpServletRequest request,
@@ -86,10 +86,8 @@ public class AjaxController implements ServletContextAware, InitializingBean
 		int type = 0;
 		if(request.getParameter("clientType").equals("Outgoing")) type = 1;
 		
-		//Need to change to design pattern layout in email
-				//	Controller --> Business Layer --> DataLayerAccess --> ManagementDAO
 		@SuppressWarnings("unchecked")
-		Vector<Client> clients = (Vector<Client>) new ManagementDAO().getClients(type);
+		Vector<Client> clients = (Vector<Client>) bl.getClientList(type);
 		
 		this.servletContext.setAttribute("Clients", clients); //update clients
 		
@@ -146,9 +144,8 @@ public class AjaxController implements ServletContextAware, InitializingBean
 	public ModelAndView getInvoiceByClient(
 			HttpServletRequest request,
 			HttpServletResponse response)
-	{		//Need to change to design pattern layout in email
-		//	Controller --> Business Layer --> DataLayerAccess --> ManagementDAO
-		Set<Invoice> invoices = new ManagementDAO().getClientInvoices(request.getParameter("clientName"));
+	{		
+		Set<Invoice> invoices = bl.getClientInvoices(request.getParameter("clientName"));
 
 		this.servletContext.setAttribute("Invoices", invoices); //update invoices
 		
@@ -156,6 +153,23 @@ public class AjaxController implements ServletContextAware, InitializingBean
 		mv.setViewName("invoiceView"); // view.jsp IRVR
 		mv.addObject("invoiceView", invoices); // request-scoped variables
 		return mv;
+	}
+
+	@RequestMapping(value="clientInfo.do", method=RequestMethod.GET)
+	public Client getInvoiceInfo(HttpServletRequest request, HttpServletResponse response)  //This class will be used to sort client lists...hopefully it works as planned
+	{
+		Client info = bl.getClient(request.getParameter("id"));
+
+		request.setAttribute("id", info.getId());
+		request.setAttribute("name", info.getName());
+		request.setAttribute("email", info.getEmail());
+		request.setAttribute("pocName", info.getPocName());
+		request.setAttribute("phone", info.getPhone());
+		request.setAttribute("fax", info.getFax());
+		request.setAttribute("address", info.getAddress());
+		request.setAttribute("address", info.getClientType());
+		
+		return null;
 	}
 	
 	@RequestMapping(value="regInvoice.do", method=RequestMethod.GET)
@@ -195,6 +209,16 @@ public class AjaxController implements ServletContextAware, InitializingBean
 	public List<Product> getProducts()
 	{
 		return products;
+	}
+	
+	public List<Product> getProductsByClient(
+			HttpServletRequest request,
+			HttpServletResponse response)
+	{
+		@SuppressWarnings("unchecked")
+		List<Product> results = (List<Product>) bl.getProdsByClient(Integer.parseInt(request.getParameter("id")));
+		
+		return results;
 	}
 	
 	@RequestMapping(value="regProduct.do", method=RequestMethod.GET)

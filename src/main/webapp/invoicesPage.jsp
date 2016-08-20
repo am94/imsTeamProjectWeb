@@ -26,6 +26,19 @@
         });
 
     });
+	
+    function ()
+    {
+        $.ajax({
+            type: "get",
+            url: "http://localhost:9001/imsWeb/clientInfo.do", //this is my servlet
+            data: "input=" +$('#ip').val()+"&output="+$('#op').val(),
+            success: function(msg)
+            {      
+                    openModal();
+            }
+        });
+    }
 </script>
 
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -66,6 +79,32 @@
 	
 	<div class="container body .col-xs-12 .col-sm-6 .col-lg-8">
 
+	<div id="NAME THIS WHAT YOU WANT" class="visible">
+		<input type="radio" name="invChoice" value="Incoming"/>
+		<input type="radio" name="invChoice" value="Outgoing"/>
+		
+		<select name="clients" onchange="">  <!-- combo box for clients based on type, needs AJAX -->
+			<option value="def" selected>Please select a client!</option>
+			<c:forEach var="c" items="${clients}">
+				<option value="${c.id}" onclick="javascript:getProducts(${c.name})">${c.name}</option>
+			</c:forEach>
+		</select>
+		
+		<select name="products">  <!-- combo box for clients based on type, needs AJAX -->
+			<option value="def" selected>Please select a product!</option>
+			<c:forEach var="p" items="${products}">
+				<option value="${p.id}">${p.name}</option>
+			</c:forEach>
+		</select>
+		
+		<input type="number" name="numOfProds" onchange="javascript:orderPrice(this.value)"><label>${prodPrice}</label>
+		<button>Change amount!</button>  <!-- THIS LITERALLY DOES NOTHING, AND WILL DO NOTHING, BUT IS NECESSARY FOR THE ABOVE ONCHANGE!!! -->
+		
+		<table class="invisible">
+			
+		</table>
+	</div>
+	
 	<div>
 		<table id="invoiceTable">
 			<tr>
@@ -100,14 +139,6 @@
 	</div>
 	<br />
 	
-		<div class="container footer .col-xs-12 .col-sm-6 .col-lg-8">
-		<jsp:include page="/footerPage/footer.jsp"></jsp:include>
-	</div>
-	<br />
-	</div>
-	
-	
-	
 	<!-- Trigger the modal with a button -->
 	<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>
 	
@@ -139,6 +170,14 @@
 	
 	  </div>
 	</div>
+	
+		<div class="container footer .col-xs-12 .col-sm-6 .col-lg-8">
+		<jsp:include page="/footerPage/footer.jsp"></jsp:include>
+	</div>
+	<br />
+	</div>
+	
+	
 		
 	
 	
