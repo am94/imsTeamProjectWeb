@@ -58,23 +58,20 @@ public class AjaxController implements ServletContextAware, InitializingBean
 	{
 		return clients;
 	}
-	
-	public Client getClientBy(String str)  //This class will be used to sort client lists...hopefully it works as planned
+
+	@RequestMapping(value="clientInfo.do", method=RequestMethod.GET)
+	public Client getClientInfo(HttpServletRequest request, HttpServletResponse response)  //This class will be used to sort client lists...hopefully it works as planned
 	{
-/*		String classType = String.valueOf(obj.getClass());
-		
-		classType = classType.substring(classType.lastIndexOf('.')+1);
-		
-		switch (classType)
-		{
-		case "Address":	//Do stuff
-			break;
-		case "String":	//Do stuff
-			break;
-		case "Integer":	//Do stuff
-			break;
-		default:break;
-		}*/
+		Client info = new ManagementDAO().getClient(request.getParameter("name"));
+
+		request.setAttribute("id", info.getId());
+		request.setAttribute("name", info.getName());
+		request.setAttribute("email", info.getEmail());
+		request.setAttribute("pocName", info.getPocName());
+		request.setAttribute("phone", info.getPhone());
+		request.setAttribute("fax", info.getFax());
+		request.setAttribute("address", info.getAddress());
+		request.setAttribute("address", info.getClientType());
 		
 		return null;
 	}

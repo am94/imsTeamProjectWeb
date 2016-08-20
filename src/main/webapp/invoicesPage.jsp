@@ -6,12 +6,38 @@
 <head>
 
 <script type="text/javascript">
+	function openModal()
+	{
+		$("#myModal").modal()
+	}
+	
+	$(document).ready(function() {
+        $('.ajaxCon').click(function ()
+        {
+            $.ajax({
+                type: "get",
+                url: "http://localhost:9001/imsWeb/clientInfo.do", //this is my servlet
+                data: "input=" +$('#ip').val()+"&output="+$('#op').val(),
+                success: function(msg)
+                {      
+                        openModal();
+                }
+            });
+        });
 
+    });
 </script>
 
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Clients!</title>
 <!-- BootStrap -->
+
+	<!-- MODAL BOOTSTRAP -->
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<!-- MODAL BOOTSTRAP -->
+
 	<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/css/bootstrap.css">
 	<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/css/bootstrap.min.css">
 	<script src="${pageContext.servletContext.contextPath}/resources/js/bootstrap.js"></script>
@@ -51,7 +77,7 @@
 		    <th></th>
 		  </tr>
 		  <c:forEach var="i" items="${invoices}">
-		  	<tr onclick=""> <!-- WILL INSERT JS TO SHOW MORE DETAILS IN POP-UP -->
+		  	<tr onclick="" data-toggle="modal" data-target="#myModal"> <!-- WILL INSERT JS TO SHOW MORE DETAILS IN POP-UP -->
 		  		<td><c:out value="${i.invoiceCK}"></c:out></td>
 		  		<td><c:out value="${i.price}"></c:out></td>
 		  		<td><c:out value="${i.prodId.name}, ${i.prodId.cost}"></c:out></td>
@@ -79,5 +105,66 @@
 	</div>
 	<br />
 	</div>
+	
+	
+	
+	<!-- Trigger the modal with a button -->
+	<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>
+	
+	<!-- Modal -->
+	<div id="myModal" class="modal fade" role="dialog">
+	  <div class="modal-dialog">
+	
+	    <!-- Modal content-->
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        <h4 class="modal-title">Modal Header</h4>
+	      </div>
+	      <div class="modal-body">
+	      <table id="modal-table">
+	        <tr><td>Name:</td><td>"${client.name}"</td></tr>
+	        <tr><td>Email:</td><td>"${client.email}"</td></tr>
+	        <tr><td>Contact Name:</td><td>"${client.pocName}"</td></tr>
+	        <tr><td>Phone:</td><td>"${client.phone}"</td></tr>
+	        <tr><td>Fax:</td><td>"${client.fax}"</td></tr>
+	        <tr><td>Address:</td><td>"${clientAddress}"</td></tr>
+	        <tr><td>Type:</td><td>"${clientType}"</td></tr>
+	        </table>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	
+	  </div>
+	</div>
+		
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 </body>
 </html>
