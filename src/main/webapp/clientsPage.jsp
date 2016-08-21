@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Clients!</title>
+<title>Client Page</title>
 <!-- BootStrap -->
 	<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/css/bootstrap.css">
 	<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/css/bootstrap.min.css">
@@ -37,7 +37,7 @@
 	
 	<div class="container body .col-xs-12 .col-sm-6 .col-lg-8">
 	<div>
-		<table id="invoiceTable">
+		<table id="personTable">
 			<tr>
 		    <th>ID</th>
 		    <th>Name</th>
