@@ -24,24 +24,24 @@ import com.revature.beans.Client;
 import com.revature.beans.Invoice;
 import com.revature.beans.Product;
 import com.revature.dataAccess.DataLayerAccess;
-import com.revature.dataAccess.ManagementDAO;
+import com.revature.data.BusinessLayer;
 
 @Controller
 public class AjaxController implements ServletContextAware, InitializingBean
 {
 	@Autowired
 	private ServletContext servletContext; //instance var
-
+	private BusinessLayer bl = new BusinessLayer();
 /*	private List<Client> clients = new Vector<Client>();
 	private List<Client> invoices = new Vector<Client>();
 	private List<Client> products = new Vector<Client>();*/
 	
 	@SuppressWarnings("unchecked")
-	private List<Client> clients = (List<Client>) new ManagementDAO().getAllClients();
+	private List<Client> clients = (List<Client>) bl.getAllClients();
 	@SuppressWarnings("unchecked")
-	private List<Invoice> invoices = (List<Invoice>) new ManagementDAO().getInvoices();
+	private List<Invoice> invoices = (List<Invoice>) bl.getInvoices();
 	@SuppressWarnings("unchecked")
-	private List<Product> products = (List<Product>) new ManagementDAO().getAllProducts();
+	private List<Product> products = (List<Product>) bl.getAllProducts();
 
 	@RequestMapping(
 			method=RequestMethod.GET, 
@@ -63,7 +63,7 @@ public class AjaxController implements ServletContextAware, InitializingBean
 	@RequestMapping(value="clientInfo.do", method=RequestMethod.GET)
 	public Client getClientInfo(HttpServletRequest request, HttpServletResponse response)  //This class will be used to sort client lists...hopefully it works as planned
 	{
-		Client info = new ManagementDAO().getClient(request.getParameter("name"));
+		Client info = bl.getClient(request.getParameter("name"));
 
 		request.setAttribute("id", info.getId());
 		request.setAttribute("name", info.getName());
@@ -86,7 +86,7 @@ public class AjaxController implements ServletContextAware, InitializingBean
 		if(request.getParameter("clientType").equals("Outgoing")) type = 1;
 		
 		@SuppressWarnings("unchecked")
-		Vector<Client> clients = (Vector<Client>) new ManagementDAO().getClients(type);
+		Vector<Client> clients = (Vector<Client>) bl.getClientList(type);
 		
 		this.servletContext.setAttribute("Clients", clients); //update clients
 		
@@ -110,7 +110,7 @@ public class AjaxController implements ServletContextAware, InitializingBean
 		}
 		
 		@SuppressWarnings("unchecked")
-		Vector<Client> clients = (Vector<Client>)this.servletContext.getAttribute("clients");
+		Set<Invoice> invoices = bl.getClientInvoices(request.getParameter("clientName"));
 		clients.add(client);
 		
 		this.servletContext.setAttribute("Clients", clients); //update peeps
@@ -184,8 +184,7 @@ public class AjaxController implements ServletContextAware, InitializingBean
 		}
 		
 		@SuppressWarnings("unchecked")
-		Vector<Invoice> invoices = 
-			(Vector<Invoice>)this.servletContext.getAttribute("people");
+		List<Product> results = (List<Product>) bl.getProdsByClient(Integer.parseInt(request.getParameter("id")));
 		invoices.add(invoice);
 		this.servletContext.setAttribute("Invoices", invoices); //update peeps
 		ModelAndView mv = new ModelAndView();
