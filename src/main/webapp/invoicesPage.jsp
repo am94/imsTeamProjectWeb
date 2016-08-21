@@ -80,6 +80,8 @@
 	<div class="container body .col-xs-12 .col-sm-6 .col-lg-8">
 
 	<div id="NAME THIS WHAT YOU WANT" class="visible">
+	Just add already! 
+	
 		<input type="radio" name="invChoice" value="Incoming"/>
 		<input type="radio" name="invChoice" value="Outgoing"/>
 		
