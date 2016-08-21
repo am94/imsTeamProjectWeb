@@ -18,12 +18,11 @@
 	<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/css/index.css">
 <body>
 	<ul>
-		<li><a href="#">Home</a></li>
-		<li><a href="#">Create Invoice</a></li>
+		<li><a href="../index.jsp">Home</a></li>
+		<li><a href="../invoicesPage.jsp">Create Invoice</a></li>
 		<li><a href="#">Order Items</a></li>
 		<li><a href="#">Check Stock</a></li>
-		<li><a href="#">Add Client</a></li>
-		<li><a href="#">Update Client</a></li>
+		<li><a href="../clientsPage.jsp">Clients Page</a></li>
 		<li><a href="#">Generate Report</a></li>
 		<li><a href="#">About</a></li>
 	</ul>
